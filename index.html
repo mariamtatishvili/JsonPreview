@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JSON</title>
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="html2canvas.esm.js"></script>
+    <script type="text/javascript" src="color-picker.js"></script>
+    <link rel="stylesheet" type="text/css" href="color-picker.css">
+
+    <style type="text/css">
+        pre {
+            /*outline: 1px solid #ccc;*/
+            padding: 5px;
+            margin: 5px;
+        }
+        
+        .string {
+            color: green;
+        }
+        
+        .number {
+            color: darkorange;
+        }
+        
+        .boolean {
+            color: blue;
+        }
+        
+        .null {
+            color: magenta;
+        }
+        
+        .key {
+            color: red;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .flex>div {
+            flex-basis: 50%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid gray;
+            margin: 10px;
+        }
+        label {
+    display: inline-block;
+    width: 150px;
+}
+input{
+  width: 250px;
+  padding: 5px;
+  margin: 5px;
+
+}
+.left-160{
+  margin-left: 160px;
+}
+
+.inputs{
+  position: relative; 
+}
+#color-picker {
+    position: relative;
+    bottom: 100px;
+    left: 500px;
+}
+.color-picker{
+  position: absolute !important;
+  left: unset  !important;
+  top: unset  !important;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="flex">
+        <div class="inputs">
+            <div class="single">
+                <label for="full_name">Full name</label>
+                <input title="full_name" type="text" class="inp" id="full_name">
+                <br>
+                <label for="age">Age</label>
+                <input title="age" type="number" class="inp" id="age">
+                <br>
+                <label for="date">Date</label>
+                <input title="date" type="date" class="inp" id="date">
+                <br>
+                <!-- <input type="color" title="color" name=""> -->
+            </div>
+            <br>
+            <br>
+            <div class="subjects">
+                <label>Favorite subjects</label>
+                <input type="text" class="inp" id="subject0">
+                <br>
+                <input type="text" class="inp left-160" id="subjects1">
+
+            </div>
+            <br><br>
+            <div class="movies">
+                <label>Favorite Movies </label>
+                 <li>Honor</li>
+                <div class="honor">
+                  <input type="text" class="inp left-160" >  <br>
+                  <input type="text" class="inp left-160" >
+                </div>
+
+                <li>Comedy</li> 
+                <div class="comedy">
+                  <input type="text" class="inp left-160" id="comedy0">  <br>
+                  <input type="text" class="inp left-160" id="comedy1">
+                </div>
+
+            </div>
+
+            <div class="other">
+              <div class="color">
+                <div id="color-picker"></div>
+              </div>
+              <br><br>
+              <div class="font">
+                <label>Font size</label>
+                <input class="font-size" name="" type="number">
+              </div>
+              <div class="indent">
+                <label>Indent size</label>
+                <input class="indent-size" name="" type="number">
+              </div>
+
+              <div class="doPDF">
+                <button class="pdf">Export PDF</button>
+              </div>
+              
+            </div>
+
+        </div>
+
+<div class="showJson">
+<pre>
+<span class="view" id="viewPDF"></span>
+</pre>
+</div>
+    </div>
+
+
+
+ <script>
+ /*     
+       
+  function syntaxHighlight(json) {
+      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+          var cls = 'number';
+          if (/^"/.test(match)) {
+              if (/:$/.test(match)) {
+                  cls = 'key';
+              } else {
+                  cls = 'string';
+              }
+          } else if (/true|false/.test(match)) {
+              cls = 'boolean';
+          } else if (/null/.test(match)) {
+              cls = 'null';
+          }
+          return '<span class="' + cls + '">' + match + '</span>';
+      });
+  }
+
+*/
+
+
+
+    function output(inp) {
+        $(".view").html(inp);
+    }
+
+    // main json object
+  var item = {};
+    // console.log(item);
+    // console.log(item);
+    // console.log(JSON.stringify(item));
+
+
+   $(".single input").keyup(function() {
+      var id = $(this).attr("title");
+      var vall = $(this).val();
+      item[id] = vall;
+      console.log(JSON.stringify(item));
+      var str = JSON.stringify(item, undefined, 1);
+      // output(syntaxHighlight(str));
+      output(output(str));
+  });
+
+
+   var subjects = [];
+
+    $(".subjects input").change(function() {
+        var vall = $(this).val();
+        subjects.push(vall);
+        item["Faoverite_subjects"] = subjects;
+        var str = JSON.stringify(item, undefined, 1);
+        output(output(str));
+
+    });
+  
+
+    var honor = [];
+    var comedy = [];
+    var Favorite_movies = {
+      Honor: honor,
+      Comedy: comedy
+    };
+
+    $(".honor input").change(function() {
+          var vall = $(this).val();
+          honor.push(vall);
+          item["Faoverite_movies"] = Favorite_movies;
+          var str = JSON.stringify(item, undefined, 1);
+          output(output(str));
+
+    });
+
+
+    $(".comedy input").change(function() {
+          var vall = $(this).val();
+          comedy.push(vall);
+          item["Faoverite_movies"] = Favorite_movies;
+          var str = JSON.stringify(item, undefined, 1);
+          output(output(str));
+
+      });
+
+
+
+    $(".font-size").change(function(event) {
+        var size  = $(this).val();
+        $(".view").css('font-size', size+"px");
+    });
+
+    $(".indent-size").change(function(event) {
+        var size  = $(this).val();
+        $(".view").parent().css('padding-left', size+"px");
+    });
+
+
+    // choose color 
+    var container = document.querySelector('#color-picker'),
+     picker = new CP(container, false, container);
+    picker.self.classList.add('static');
+    picker.set('rgb(0, 0, 0)');
+    picker.enter();
+    picker.on("change", function(color) {
+        $(".view").css('color', '#' + color);
+    });
+  
+
+
+
+    // print json 
+    $(".pdf").click(function(){
+      var doc = new jsPDF();
+      var elementHTML = $('pre').text();
+      var specialElementHandlers = {
+          '#elementH': function (element, renderer) {
+              return true;
+          }
+      };
+      doc.fromHTML(elementHTML, 10, 10, {
+          'width':  $('#pre').width(),
+          'elementHandlers': specialElementHandlers,
+          format: 'a4'
+      });
+      doc.save('Page.pdf');
+    });
+
+
+       
+
+     
+    </script>
+</body>
+
+</html>
